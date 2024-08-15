@@ -23,6 +23,17 @@ const CollaborativeRoom = ({
   const inputRef = useRef<HTMLDivElement>(null);
 
   const updateTitleHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if(e.key === 'Enter') {
+      setLoading(true);
+
+      try {
+
+      } catch (error) {
+        console.error(error);
+      }
+
+      setLoading(false)
+    }
 
   }
 
@@ -35,7 +46,7 @@ const CollaborativeRoom = ({
 
     document.addEventListener('mousedown', handleClickOutside);
 
-    return () {
+    return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [])
