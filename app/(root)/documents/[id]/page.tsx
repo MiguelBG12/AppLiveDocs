@@ -14,10 +14,13 @@ const Document = async ({ params: { id } }: SearchParamProps) => {
 
   if (!room) redirect("/");
 
-  // TODO: Assess the permisiions of the user to access the document
+  // TODO: Assess the permissions of the user to access the document
   return (
     <main className="flex w-full flex-col items-center">
-      <CollaborativeRoom roomId={id} roomMetadata={room.roomMetadata} />
+      <CollaborativeRoom
+        roomId={id}
+        roomMetadata={room.metadata}
+      />
     </main>
   );
 };
