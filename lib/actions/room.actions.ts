@@ -45,7 +45,7 @@ export const getDocument = async ({
   try {
     const room = await liveblocks.getRoom(roomId);
 
-    // TODO: Bring this back when we have the permissions system in place  
+    // TODO: Bring this back when we have the permissions system in place
     // const hasAccess = Object.keys(room.usersAccesses).includes(userId);
 
     // if (!hasAccess) {
@@ -55,5 +55,21 @@ export const getDocument = async ({
     return parseStringify(room);
   } catch (error) {
     console.log(`Error happened while getting room: ${error}`);
+  }
+};
+
+export const updateDocument = async (roomId: string, title: string) => {
+  try {
+    const updatedRoom = await liveblocks.updateRoom(roomId, {
+      metadata: {
+        title,
+      },
+    });
+
+    revalidatePath(`/document/${roomId}`);
+
+    return parseStringify(updatedRoom);
+  } catch (error) {
+    console.log(`Error happened while updating  a room: ${error}`);
   }
 };
