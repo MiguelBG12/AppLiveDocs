@@ -8,12 +8,13 @@ import ActiveCollaborators from "./ActiveCollaborators";
 import { useState, useRef, useEffect } from "react";
 import { Input } from "./ui/input";
 import Image from "next/image";
+import { updateDocument } from "@/lib/actions/room.actions";
 
 const CollaborativeRoom = ({
   roomId,
   roomMetadata,
 }: CollaborativeRoomProps) => {
-  const currentUserType = 'editor'
+  const currentUserType = "editor";
 
   const [documentTitle, setDocumentTitle] = useState(roomMetadata.title);
   const [editing, setEditing] = useState(false);
@@ -22,41 +23,61 @@ const CollaborativeRoom = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
 
-  const updateTitleHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === 'Enter') {
+  const updateTitleHandler = async (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Enter") {
       setLoading(true);
 
       try {
+        if (documentTitle !== roomMetadata.title) {
+          const updatedDocument = await updateDocument(roomId, documentTitle);
 
+          if (updatedDocument) {
+            setEditing(false);
+          }
+        }
       } catch (error) {
         console.error(error);
       }
 
-      setLoading(false)
+      setLoading(false);
     }
-
-  }
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if(containerRef.current &&  !containerRef.current.contains(e.target as Node)) {
-        setEditing(false)
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setEditing(false);
+        updateDocument(roomId, documentTitle);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [roomId, documentTitle]);
+
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
     }
-  }, [])
+  }, [editing]);
 
   return (
     <RoomProvider id={roomId}>
       <ClientSideSuspense fallback={<div>Loading…</div>}>
         <div className="collaborative-room">
           <Header>
-            <div ref={containerRef} className="flex w-fit items-center justify-center gap-2">
+            <div
+              ref={containerRef}
+              className="flex w-fit items-center justify-center gap-2"
+            >
               {editing && !loading ? (
                 <Input
                   type="text"
@@ -74,7 +95,7 @@ const CollaborativeRoom = ({
                 </>
               )}
 
-              {currentUserType === 'editor' && !editing && (
+              {currentUserType === "editor" && !editing && (
                 <Image
                   src="/assets/icons/edit.svg"
                   alt="edit"
@@ -85,7 +106,7 @@ const CollaborativeRoom = ({
                 />
               )}
 
-              {currentUserType !== 'editor' && !editing && (
+              {currentUserType !== "editor" && !editing && (
                 <p className="view-only-tag">View only</p>
               )}
 
