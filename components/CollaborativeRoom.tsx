@@ -126,7 +126,7 @@ const CollaborativeRoom = ({
           </Header>
           <Editor
             roomId={roomId}
-            currenuserType={currentUserType}
+            currentUserType={currentUserType}
           />
         </div>
       </ClientSideSuspense>
