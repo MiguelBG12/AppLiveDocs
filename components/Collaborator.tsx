@@ -1,5 +1,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
+import UserTypeSelector from "./UserTypeSelector";
+import { Button } from "./ui/button";
 
 const Collaborator = ({
   roomId,
@@ -37,7 +39,23 @@ const Collaborator = ({
         </div>
       </div>
 
-      
+      {creatorId === collaborator.id ? (
+        <p className="text-sm text-blue-100">Owner</p>
+      ) : (
+        <div className="flex items-center">
+          <UserTypeSelector
+            userType={userType as UserType}
+            setUserType={setUserType || "viewer"}
+            onClickHandler={shareDocumentHandler}
+          />
+          <Button
+            type="button"
+            onClick={() => removeCollaboratorHandler(collaborator.email)}
+          >
+            Remove
+          </Button>
+        </div>
+      )}
     </li>
   );
 };
