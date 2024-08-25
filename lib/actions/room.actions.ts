@@ -93,7 +93,16 @@ export const updateDocumentAccess = async ({
   try {
     const usersAccesses: RoomAccesses = {
       [email]: getAccessType(userType) as AccessType,
+    };
+
+    const room = await liveblocks.updateRoom(roomId, { usersAccesses });
+
+    if (room) {
+      // TODO: Send a notification to the user
     }
+
+    revalidatePath(`/documents/${roomId}`);
+    return parseStringify(room);
   } catch (error) {
     console.log(`Error happened while updating a room access: ${error}`);
   }
