@@ -74,7 +74,7 @@ const Notifications = () => {
                         showRoomName={false}
                       />
                     ),
-                    $documentsAccess: (props) => (
+                    $documentAccess: (props) => (
                       <InboxNotification.Custom
                         {...props}
                         title={props.inboxNotification.activities[0].data.title}
